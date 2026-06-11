@@ -1,0 +1,10 @@
+target/
+
+.idea/
+*.iml
+
+docs/superpowers/plans/
+
+.DS_Store
+
+*.log
