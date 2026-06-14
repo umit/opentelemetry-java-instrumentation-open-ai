@@ -47,16 +47,16 @@ class OpenAiTelemetryTest {
         .build();
 
     OpenAIClient client = (OpenAIClient) OpenAiTelemetry.create(openTelemetry).wrap(new FakeOpenAIClient());
-    Object response = client.chat().completions().create(new FakeParams("deepseek-chat"));
+    Object response = client.chat().completions().create(new FakeParams("gpt-4o"));
 
     assertEquals("chatcmpl-test", response.getClass().cast(response).toString());
     var span = spans.getFinishedSpanItems().get(0);
-    assertEquals("chat deepseek-chat", span.getName());
+    assertEquals("chat gpt-4o", span.getName());
     assertEquals(io.opentelemetry.api.trace.SpanKind.CLIENT, span.getKind());
     assertEquals("openai", span.getAttributes().get(AttributeKey.stringKey("gen_ai.provider.name")));
     assertEquals("chat", span.getAttributes().get(AttributeKey.stringKey("gen_ai.operation.name")));
     assertEquals("chat_completions", span.getAttributes().get(AttributeKey.stringKey("openai.api.type")));
-    assertEquals("deepseek-chat", span.getAttributes().get(AttributeKey.stringKey("gen_ai.request.model")));
+    assertEquals("gpt-4o", span.getAttributes().get(AttributeKey.stringKey("gen_ai.request.model")));
     assertEquals(2L, span.getAttributes().get(AttributeKey.longKey("gen_ai.request.choice.count")));
     assertEquals(42L, span.getAttributes().get(AttributeKey.longKey("gen_ai.request.seed")));
     assertEquals(false, span.getAttributes().get(AttributeKey.booleanKey("gen_ai.request.stream")));
@@ -70,7 +70,7 @@ class OpenAiTelemetryTest {
         .get(AttributeKey.stringArrayKey("gen_ai.request.stop_sequences"))
         .contains("END"));
     assertEquals("chatcmpl-test", span.getAttributes().get(AttributeKey.stringKey("gen_ai.response.id")));
-    assertEquals("deepseek-v4", span.getAttributes().get(AttributeKey.stringKey("gen_ai.response.model")));
+    assertEquals("gpt-4o-2024-08-06", span.getAttributes().get(AttributeKey.stringKey("gen_ai.response.model")));
     assertEquals("default", span.getAttributes().get(AttributeKey.stringKey("openai.response.service_tier")));
     assertEquals("fp-test", span.getAttributes().get(AttributeKey.stringKey("openai.response.system_fingerprint")));
     assertEquals(12L, span.getAttributes().get(AttributeKey.longKey("gen_ai.usage.input_tokens")));
@@ -97,7 +97,7 @@ class OpenAiTelemetryTest {
         .build();
 
     OpenAIClient client = (OpenAIClient) OpenAiTelemetry.create(openTelemetry).wrap(new FakeOpenAIClient());
-    client.chat().completions().create(new FakeParams("deepseek-chat"));
+    client.chat().completions().create(new FakeParams("gpt-4o"));
 
     assertTrue(logs.getFinishedLogRecordItems().isEmpty());
   }
@@ -113,7 +113,7 @@ class OpenAiTelemetryTest {
         .build();
 
     OpenAIClient client = (OpenAIClient) OpenAiTelemetry.create(openTelemetry).wrap(new FakeOpenAIClient());
-    client.chat().completions().create(new FakeParams("deepseek-chat"));
+    client.chat().completions().create(new FakeParams("gpt-4o"));
 
     var span = spans.getFinishedSpanItems().get(0);
     assertTrue(span.getEvents().isEmpty());
@@ -134,7 +134,7 @@ class OpenAiTelemetryTest {
         .build();
 
     OpenAIClient client = (OpenAIClient) OpenAiTelemetry.create(openTelemetry).wrap(new FakeOpenAIClient());
-    client.chat().completions().create(new FakeParams("deepseek-chat"));
+    client.chat().completions().create(new FakeParams("gpt-4o"));
 
     var span = spans.getFinishedSpanItems().get(0);
     assertEquals(null, span.getAttributes().get(AttributeKey.stringKey("gen_ai.input.messages")));
@@ -142,7 +142,7 @@ class OpenAiTelemetryTest {
     var event = span.getEvents().get(0);
     assertEquals("gen_ai.client.inference.operation.details", event.getName());
     assertEquals("chat", event.getAttributes().get(AttributeKey.stringKey("gen_ai.operation.name")));
-    assertEquals("deepseek-chat", event.getAttributes().get(AttributeKey.stringKey("gen_ai.request.model")));
+    assertEquals("gpt-4o", event.getAttributes().get(AttributeKey.stringKey("gen_ai.request.model")));
     assertTrue(event.getAttributes().get(AttributeKey.stringKey("gen_ai.input.messages")).contains("user: 404"));
     assertTrue(event.getAttributes()
         .get(AttributeKey.stringKey("gen_ai.output.messages"))
@@ -164,7 +164,7 @@ class OpenAiTelemetryTest {
         .build();
 
     OpenAIClient client = (OpenAIClient) OpenAiTelemetry.create(openTelemetry).wrap(new FakeOpenAIClient());
-    client.chat().completions().create(new FakeParams("deepseek-chat"));
+    client.chat().completions().create(new FakeParams("gpt-4o"));
 
     var span = spans.getFinishedSpanItems().get(0);
     assertTrue(span.getEvents().isEmpty());
@@ -189,7 +189,7 @@ class OpenAiTelemetryTest {
         .build();
 
     OpenAIClient client = (OpenAIClient) OpenAiTelemetry.create(openTelemetry).wrap(new FakeOpenAIClient());
-    client.chat().completions().create(new FakeParams("deepseek-chat"));
+    client.chat().completions().create(new FakeParams("gpt-4o"));
 
     var span = spans.getFinishedSpanItems().get(0);
     assertEquals(1, span.getEvents().size());
@@ -212,16 +212,16 @@ class OpenAiTelemetryTest {
     Object response = client.async()
         .chat()
         .completions()
-        .create(new FakeParams("deepseek-chat"))
+        .create(new FakeParams("gpt-4o"))
         .join();
 
     assertEquals("chatcmpl-test", response.getClass().cast(response).toString());
     var span = spans.getFinishedSpanItems().get(0);
-    assertEquals("chat deepseek-chat", span.getName());
+    assertEquals("chat gpt-4o", span.getName());
     assertEquals(io.opentelemetry.api.trace.SpanKind.CLIENT, span.getKind());
     assertEquals("chat", span.getAttributes().get(AttributeKey.stringKey("gen_ai.operation.name")));
-    assertEquals("deepseek-chat", span.getAttributes().get(AttributeKey.stringKey("gen_ai.request.model")));
-    assertEquals("deepseek-v4", span.getAttributes().get(AttributeKey.stringKey("gen_ai.response.model")));
+    assertEquals("gpt-4o", span.getAttributes().get(AttributeKey.stringKey("gen_ai.request.model")));
+    assertEquals("gpt-4o-2024-08-06", span.getAttributes().get(AttributeKey.stringKey("gen_ai.response.model")));
     assertEquals(12L, span.getAttributes().get(AttributeKey.longKey("gen_ai.usage.input_tokens")));
     assertEquals(7L, span.getAttributes().get(AttributeKey.longKey("gen_ai.usage.output_tokens")));
     assertTrue(span.getAttributes().get(AttributeKey.stringKey("gen_ai.input.messages")).contains("user: 404"));
@@ -246,7 +246,7 @@ class OpenAiTelemetryTest {
         .build();
 
     OpenAIClient client = (OpenAIClient) OpenAiTelemetry.create(openTelemetry).wrap(new FakeOpenAIClient());
-    client.chat().completions().create(new FakeParams("deepseek-chat"));
+    client.chat().completions().create(new FakeParams("gpt-4o"));
 
     assertTrue(logs.getFinishedLogRecordItems().isEmpty());
   }
@@ -263,7 +263,7 @@ class OpenAiTelemetryTest {
     OpenAIClient client = (OpenAIClient) OpenAiTelemetry.create(openTelemetry).wrap(new FailingOpenAIClient());
 
     assertThrows(IllegalStateException.class,
-        () -> client.chat().completions().create(new FakeParams("deepseek-chat")));
+        () -> client.chat().completions().create(new FakeParams("gpt-4o")));
 
     var span = spans.getFinishedSpanItems().get(0);
     assertEquals(io.opentelemetry.api.trace.StatusCode.ERROR, span.getStatus().getStatusCode());
@@ -288,7 +288,7 @@ class OpenAiTelemetryTest {
     OpenAIClient client = (OpenAIClient) OpenAiTelemetry.create(openTelemetry).wrap(new RateLimitedOpenAIClient());
 
     assertThrows(FakeRateLimitException.class,
-        () -> client.chat().completions().create(new FakeParams("deepseek-chat")));
+        () -> client.chat().completions().create(new FakeParams("gpt-4o")));
 
     var span = spans.getFinishedSpanItems().get(0);
     assertEquals(io.opentelemetry.api.trace.StatusCode.ERROR, span.getStatus().getStatusCode());
@@ -301,7 +301,7 @@ class OpenAiTelemetryTest {
         Attributes.builder()
             .put("gen_ai.operation.name", "chat")
             .put("gen_ai.provider.name", "openai")
-            .put("gen_ai.request.model", "deepseek-chat")
+            .put("gen_ai.request.model", "gpt-4o")
             .put("error.type", "429")
             .build());
     assertEquals(1L, durationPoint.getCount());
@@ -321,7 +321,7 @@ class OpenAiTelemetryTest {
         .build();
 
     OpenAIClient client = (OpenAIClient) OpenAiTelemetry.create(openTelemetry).wrap(new FakeOpenAIClient());
-    client.chat().completions().create(new FakeParams("deepseek-chat"));
+    client.chat().completions().create(new FakeParams("gpt-4o"));
 
     Collection<MetricData> data = metrics.collectAllMetrics();
     HistogramPointData inputTokens = histogramPoint(
@@ -330,8 +330,8 @@ class OpenAiTelemetryTest {
         Attributes.builder()
             .put("gen_ai.operation.name", "chat")
             .put("gen_ai.provider.name", "openai")
-            .put("gen_ai.request.model", "deepseek-chat")
-            .put("gen_ai.response.model", "deepseek-v4")
+            .put("gen_ai.request.model", "gpt-4o")
+            .put("gen_ai.response.model", "gpt-4o-2024-08-06")
             .put("gen_ai.token.type", "input")
             .build());
     HistogramPointData outputTokens = histogramPoint(
@@ -340,8 +340,8 @@ class OpenAiTelemetryTest {
         Attributes.builder()
             .put("gen_ai.operation.name", "chat")
             .put("gen_ai.provider.name", "openai")
-            .put("gen_ai.request.model", "deepseek-chat")
-            .put("gen_ai.response.model", "deepseek-v4")
+            .put("gen_ai.request.model", "gpt-4o")
+            .put("gen_ai.response.model", "gpt-4o-2024-08-06")
             .put("gen_ai.token.type", "output")
             .build());
     HistogramPointData duration = histogramPoint(
@@ -350,8 +350,8 @@ class OpenAiTelemetryTest {
         Attributes.builder()
             .put("gen_ai.operation.name", "chat")
             .put("gen_ai.provider.name", "openai")
-            .put("gen_ai.request.model", "deepseek-chat")
-            .put("gen_ai.response.model", "deepseek-v4")
+            .put("gen_ai.request.model", "gpt-4o")
+            .put("gen_ai.response.model", "gpt-4o-2024-08-06")
             .build());
 
     assertEquals(12.0d, inputTokens.getSum());
@@ -373,7 +373,7 @@ class OpenAiTelemetryTest {
     OpenAIClient client = (OpenAIClient) OpenAiTelemetry.create(openTelemetry).wrap(new FakeOpenAIClient());
     FakeStreamResponse response = (FakeStreamResponse) client.chat()
         .completions()
-        .createStreaming(new FakeParams("deepseek-chat"));
+        .createStreaming(new FakeParams("gpt-4o"));
 
     assertTrue(spans.getFinishedSpanItems().isEmpty());
     try (Stream<Object> stream = response.stream()) {
@@ -381,10 +381,10 @@ class OpenAiTelemetryTest {
     }
 
     var span = spans.getFinishedSpanItems().get(0);
-    assertEquals("chat deepseek-chat", span.getName());
+    assertEquals("chat gpt-4o", span.getName());
     assertEquals(true, span.getAttributes().get(AttributeKey.booleanKey("gen_ai.request.stream")));
     assertEquals("chatcmpl-stream", span.getAttributes().get(AttributeKey.stringKey("gen_ai.response.id")));
-    assertEquals("deepseek-v4-stream", span.getAttributes().get(AttributeKey.stringKey("gen_ai.response.model")));
+    assertEquals("gpt-4o-stream", span.getAttributes().get(AttributeKey.stringKey("gen_ai.response.model")));
     assertEquals("default", span.getAttributes().get(AttributeKey.stringKey("openai.response.service_tier")));
     assertEquals("fp-stream", span.getAttributes().get(AttributeKey.stringKey("openai.response.system_fingerprint")));
     assertEquals(30L, span.getAttributes().get(AttributeKey.longKey("gen_ai.usage.input_tokens")));
@@ -410,7 +410,7 @@ class OpenAiTelemetryTest {
     OpenAIClient client = (OpenAIClient) OpenAiTelemetry.create(openTelemetry).wrap(new StreamingFailingOpenAIClient());
     FakeStreamResponse response = (FakeStreamResponse) client.chat()
         .completions()
-        .createStreaming(new FakeParams("deepseek-chat"));
+        .createStreaming(new FakeParams("gpt-4o"));
 
     IllegalStateException error;
     try (Stream<Object> stream = response.stream()) {
@@ -439,7 +439,7 @@ class OpenAiTelemetryTest {
     OpenAIClient client = (OpenAIClient) OpenAiTelemetry.create(openTelemetry).wrap(new FakeOpenAIClient());
     FakeStreamResponse response = (FakeStreamResponse) client.chat()
         .completions()
-        .createStreaming(new FakeParams("deepseek-chat"));
+        .createStreaming(new FakeParams("gpt-4o"));
 
     try (Stream<Object> stream = response.stream()) {
       stream.toList();
@@ -671,7 +671,7 @@ class OpenAiTelemetryTest {
     }
 
     String model() {
-      return "deepseek-v4";
+      return "gpt-4o-2024-08-06";
     }
 
     List<FakeChoice> choices() {
@@ -751,8 +751,8 @@ class OpenAiTelemetryTest {
     @Override
     public Stream<Object> stream() {
       return Stream.of(
-          new FakeChunk("chatcmpl-stream", "deepseek-v4-stream", null, null),
-          new FakeChunk("chatcmpl-stream", "deepseek-v4-stream", "STOP", new FakeStreamingUsage()));
+          new FakeChunk("chatcmpl-stream", "gpt-4o-stream", null, null),
+          new FakeChunk("chatcmpl-stream", "gpt-4o-stream", "STOP", new FakeStreamingUsage()));
     }
 
     @Override

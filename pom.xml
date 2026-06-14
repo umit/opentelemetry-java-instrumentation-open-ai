@@ -5,7 +5,7 @@
 
   <groupId>io.github.umitunal</groupId>
   <artifactId>opentelemetry-java-instrumentation-open-ai</artifactId>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
   <name>OpenTelemetry Java Instrumentation for OpenAI</name>
   <description>OpenTelemetry Java agent extension for OpenAI Java SDK 4.x GenAI telemetry.</description>
   <url>https://github.com/umitunal/opentelemetry-java-instrumentation-open-ai</url>

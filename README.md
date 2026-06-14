@@ -41,7 +41,7 @@ mvn -q package
 The extension jar is produced at:
 
 ```text
-target/opentelemetry-java-instrumentation-open-ai-0.1.0.jar
+target/opentelemetry-java-instrumentation-open-ai-0.2.0.jar
 ```
 
 ## Installation
@@ -63,7 +63,7 @@ Then attach both the OpenTelemetry Java agent and this extension:
 ```bash
 java \
   -javaagent:/path/to/opentelemetry-javaagent.jar \
-  -Dotel.javaagent.extensions=/path/to/opentelemetry-java-instrumentation-open-ai-0.1.0.jar \
+  -Dotel.javaagent.extensions=/path/to/opentelemetry-java-instrumentation-open-ai-0.2.0.jar \
   -Dotel.instrumentation.openai-java.enabled=false \
   -Dotel.instrumentation.openai.content.capture.mode=event \
   -jar app.jar
